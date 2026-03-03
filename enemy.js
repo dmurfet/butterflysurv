@@ -211,7 +211,7 @@ class WaveSpawner {
     }
 
     update(currentTime, enemies) {
-        if (currentTime - this.lastSpawn >= this.spawnInterval) {
+        if (currentTime - this.lastSpawn >= this.spawnInterval && enemies.length < 200) {
             this.spawnWave(enemies);
             this.lastSpawn = currentTime;
             this.waveNumber++;
