@@ -62,16 +62,23 @@ class WingBlade extends Weapon {
         this.angle = 0;
         this.radius = 50;
         this.bladeCount = 1; // Number of rotating blades
+        this.hitCooldowns = new Map(); // enemy -> timestamp of last hit
+        this.hitCooldownMs = 500; // can hit same enemy once per 500ms
     }
 
     attack(player, enemies, particles, currentTime) {
         // Rotating blade doesn't use projectiles, handled differently
-        this.angle += 0.1;
+        this.angle += 0.035;
 
         // Play whoosh sound once per full rotation
         if (!this._lastSoundAngle || this.angle - this._lastSoundAngle >= Math.PI * 2) {
             AudioManager.play('wingBlade');
             this._lastSoundAngle = this.angle;
+        }
+
+        // Clean up cooldowns for dead enemies
+        for (const [enemy, _] of this.hitCooldowns) {
+            if (enemy.dead) this.hitCooldowns.delete(enemy);
         }
 
         // Check collision with enemies for each blade
@@ -82,8 +89,12 @@ class WingBlade extends Weapon {
 
             enemies.forEach(enemy => {
                 const dist = Math.sqrt((enemy.x - bladeX) ** 2 + (enemy.y - bladeY) ** 2);
-                if (dist < 15) {
-                    enemy.takeDamage(this.damage * 0.05); // Continuous damage
+                if (dist < 20) {
+                    const lastHit = this.hitCooldowns.get(enemy) || 0;
+                    if (currentTime - lastHit >= this.hitCooldownMs) {
+                        enemy.takeDamage(this.damage);
+                        this.hitCooldowns.set(enemy, currentTime);
+                    }
                 }
             });
         }
