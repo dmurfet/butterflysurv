@@ -170,6 +170,11 @@ class ParticleSystem {
     }
 
     emit(x, y, count = 10, type = 'default') {
+        if (type === 'xp') {
+            const xpCount = this.particles.filter(p => p.type === 'xp').length;
+            count = Math.min(count, 40 - xpCount);
+            if (count <= 0) return;
+        }
         for (let i = 0; i < count; i++) {
             this.particles.push(new Particle(x, y, type));
         }
