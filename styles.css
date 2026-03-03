@@ -1,0 +1,417 @@
+/* Butterfly Survivors - Arcade Style */
+
+:root {
+    --gold: #FFD700;
+    --purple: #8B00FF;
+    --dark-purple: #1a0033;
+    --green: #00FF41;
+    --red: #FF0040;
+    --cyan: #00FFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(180deg, #000000 0%, var(--dark-purple) 50%, #000000 100%);
+    color: var(--gold);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.game-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* HUD */
+.hud {
+    display: flex;
+    gap: 20px;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--gold);
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.hud-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-label {
+    color: var(--cyan);
+}
+
+/* Health Bar */
+.health-bar-container {
+    width: 100px;
+    height: 16px;
+    background: rgba(255, 0, 64, 0.3);
+    border: 1px solid var(--red);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.health-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), #FF4040);
+    width: 100%;
+    transition: width 0.3s;
+}
+
+/* XP Bar */
+.xp-bar-container {
+    width: 120px;
+    height: 16px;
+    background: rgba(0, 255, 65, 0.3);
+    border: 1px solid var(--green);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.xp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), #40FF80);
+    width: 0%;
+    transition: width 0.3s;
+}
+
+/* Canvas */
+#gameCanvas {
+    border: 3px solid var(--gold);
+    border-radius: 5px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    background: #0a0014;
+    cursor: crosshair;
+}
+
+/* Start Screen */
+.start-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.95);
+    border: 3px solid var(--gold);
+    border-radius: 10px;
+    z-index: 1000;
+    min-width: 400px;
+}
+
+.start-screen h1 {
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px var(--gold);
+}
+
+.start-screen h2 {
+    font-size: 1.5rem;
+    color: var(--purple);
+    margin-bottom: 30px;
+}
+
+.instructions {
+    font-size: 1rem;
+    color: var(--cyan);
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+
+.start-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, var(--purple), #6000BB);
+    color: white;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 0, 255, 0.5);
+}
+
+.start-btn:active {
+    transform: translateY(0);
+}
+
+/* Upgrade Screen */
+.upgrade-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.98);
+    border: 3px solid var(--gold);
+    border-radius: 10px;
+    z-index: 1000;
+    min-width: 500px;
+}
+
+.upgrade-screen h2 {
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px var(--gold);
+    animation: pulse 1s ease infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.upgrade-screen p {
+    font-size: 1.2rem;
+    color: var(--cyan);
+    margin-bottom: 20px;
+}
+
+.upgrade-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upgrade-choice {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(139, 0, 255, 0.3), rgba(42, 0, 89, 0.3));
+    color: var(--gold);
+    border: 2px solid var(--purple);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.upgrade-choice:hover {
+    border-color: var(--gold);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    transform: translateX(5px);
+}
+
+.upgrade-choice-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--gold);
+    margin-bottom: 5px;
+}
+
+.upgrade-choice-desc {
+    font-size: 0.9rem;
+    color: var(--cyan);
+}
+
+/* Pause Menu */
+.pause-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.98);
+    border: 3px solid var(--cyan);
+    border-radius: 10px;
+    z-index: 1000;
+    min-width: 400px;
+}
+
+.pause-menu h2 {
+    font-size: 3rem;
+    color: var(--cyan);
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px var(--cyan);
+}
+
+.pause-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.menu-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, var(--purple), #6000BB);
+    color: white;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 0, 255, 0.5);
+}
+
+.pause-hint {
+    font-size: 0.9rem;
+    color: rgba(255, 215, 0, 0.6);
+}
+
+/* Game Over Screen */
+.game-over-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.98);
+    border: 3px solid var(--red);
+    border-radius: 10px;
+    z-index: 1000;
+    min-width: 400px;
+}
+
+.game-over-screen h2 {
+    font-size: 3rem;
+    color: var(--red);
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px var(--red);
+}
+
+.stats {
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 30px;
+}
+
+.stats p {
+    margin: 10px 0;
+}
+
+.restart-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, var(--purple), #6000BB);
+    color: white;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.restart-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 0, 255, 0.5);
+}
+
+/* Controls Help */
+.controls-help {
+    position: absolute;
+    bottom: 10px;
+    font-size: 12px;
+    color: rgba(255, 215, 0, 0.6);
+}
+
+/* High Score Indicators */
+.high-score-approaching {
+    animation: hsApproach 0.5s ease infinite;
+    color: #FF8C00 !important;
+}
+
+@keyframes hsApproach {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.high-score-broken {
+    color: #00FF41 !important;
+    text-shadow: 0 0 8px #00FF41;
+}
+
+/* Audio Controls */
+.audio-controls {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+}
+
+.audio-btn {
+    font-size: 1.1rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 3px 7px;
+    cursor: pointer;
+    color: var(--gold);
+    line-height: 1;
+}
+
+.audio-btn:hover {
+    background: rgba(139, 0, 255, 0.4);
+}
+
+.volume-slider {
+    width: 70px;
+    height: 4px;
+    accent-color: var(--gold);
+    cursor: pointer;
+}
+
+/* Hidden class */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    #gameCanvas {
+        width: 100%;
+        height: auto;
+    }
+
+    .hud {
+        flex-wrap: wrap;
+        font-size: 12px;
+        gap: 10px;
+    }
+
+    .start-screen,
+    .upgrade-screen,
+    .game-over-screen {
+        min-width: 90%;
+        padding: 20px;
+    }
+
+    .start-screen h1 {
+        font-size: 2rem;
+    }
+}

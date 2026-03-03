@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butterfly Survivors | 蝴蝶幸存者</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-item">
+                <span class="hud-label">HP:</span>
+                <div class="health-bar-container">
+                    <div id="healthBar" class="health-bar"></div>
+                </div>
+                <span id="healthText">100/100</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">LVL:</span>
+                <span id="levelText">1</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">XP:</span>
+                <div class="xp-bar-container">
+                    <div id="xpBar" class="xp-bar"></div>
+                </div>
+                <span id="xpText">0/100</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Time:</span>
+                <span id="timeText">00:00</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Kills:</span>
+                <span id="killsText">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Best:</span>
+                <span id="highScoreText">--:--</span>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas" width="1024" height="768"></canvas>
+
+        <!-- Upgrade Screen (hidden by default) -->
+        <div id="upgradeScreen" class="upgrade-screen hidden">
+            <h2>LEVEL UP!</h2>
+            <p>Choose an upgrade:</p>
+            <div id="upgradeChoices" class="upgrade-choices"></div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pauseMenu" class="pause-menu hidden">
+            <h2>PAUSED</h2>
+            <div class="pause-buttons">
+                <button id="resumeBtn" class="menu-btn">Resume</button>
+                <button id="restartFromPauseBtn" class="menu-btn">Restart</button>
+            </div>
+            <p class="pause-hint">Press ESC to resume</p>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="game-over-screen hidden">
+            <h2>GAME OVER</h2>
+            <div class="stats">
+                <p>Survival Time: <span id="finalTime">00:00</span></p>
+                <p>Enemies Killed: <span id="finalKills">0</span></p>
+                <p>Level Reached: <span id="finalLevel">1</span></p>
+                <p>Best Time: <span id="finalHighScore">--:--</span></p>
+            </div>
+            <button id="restartBtn" class="restart-btn">Restart</button>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="startScreen" class="start-screen">
+            <h1>Butterfly Survivors</h1>
+            <h2>蝴蝶幸存者</h2>
+            <p class="instructions">
+                Use <strong>WASD</strong> or <strong>Arrow Keys</strong> to move<br>
+                Your butterfly auto-shoots at enemies<br>
+                Collect XP and level up to get stronger!
+            </p>
+            <button id="startBtn" class="start-btn">Start Game</button>
+        </div>
+
+        <!-- Controls Help -->
+        <div class="controls-help">
+            Controls: WASD or Arrow Keys to move | M to mute
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-controls">
+            <button id="muteBtn" class="audio-btn" title="Toggle Sound (M)">🔊</button>
+            <input id="volumeSlider" type="range" min="0" max="100" value="70" class="volume-slider" title="Volume">
+        </div>
+    </div>
+
+    <!-- Load Scripts -->
+    <script src="audio.js"></script>
+    <script src="effects.js"></script>
+    <script src="particles.js"></script>
+    <script src="weapon.js"></script>
+    <script src="enemy.js"></script>
+    <script src="player.js"></script>
+    <script src="upgrades.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
